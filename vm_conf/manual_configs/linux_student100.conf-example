@@ -1,0 +1,24 @@
+kernel = '/usr/lib/xen/boot/hvmloader'
+builder = 'hvm'
+memory = '128'
+device_model='/usr/lib/xen/bin/qemu-dm'
+
+# Disks
+
+disk = [ 'tap:qcow2:/home/vmdsk/linux_student100.qcow,hda,w','tap:aio:/home/local_blade/OS_images/trinity-rescue-kit.3.4-build-367.iso,hdc:cdrom,r' ]
+# Hostname
+name ='linux_student100'
+
+# Mouse
+usb = 1
+usbdevice = 'tablet'
+
+# Behaviour
+boot='c'
+vnc=1
+vncviewer=0
+sdl=0
+vncdisplay=100 # vnc console will use port 5900 + 01 for the display
+
+#NIC
+vif=['mac=02:16:3e:05:00:64,vifname=lin_100,bridge=Net-200']

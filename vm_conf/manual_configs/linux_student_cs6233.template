@@ -1,0 +1,25 @@
+kernel = '/usr/lib/xen/boot/hvmloader'
+builder = 'hvm'
+memory = '128'
+vcpus = '4'
+device_model='/usr/lib/xen/bin/qemu-dm'
+
+# Disks
+
+disk = [ 'tap:qcow2:/home/vmdsk/linux_studentSTUDENT_NUM.qcow,hda,w']
+# Hostname
+name ='linux_studentSTUDENT_NUM'
+
+# Mouse
+usb = 1
+usbdevice = 'tablet'
+
+# Behaviour
+boot='c'
+vnc=1
+vncviewer=0
+sdl=0
+vncdisplay=STUDENT_VNC # vnc console will use port 5900 + 01 for the display
+
+#NIC
+vif=['mac=02:16:3e:05:STUDENT_MAC,vifname=lin_STUDENT_NUM,bridge=Net-6233']

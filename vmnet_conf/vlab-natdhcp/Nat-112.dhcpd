@@ -1,0 +1,10 @@
+start 		10.112.1.100
+end		10.112.1.200
+interface	bond0.112
+option	subnet	255.255.255.0
+opt	router	10.112.1.1
+option	dns	128.238.2.38
+option	domain	vital-nat-112
+option	lease	3600
+pidfile	/home/vlab_scp/vmnet_conf/run/nat-112.pid
+lease_file /home/vlab_scp/vmnet_conf/leases/nat-112.leases

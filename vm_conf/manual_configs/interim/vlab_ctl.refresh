@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# args need to be escaped..
+cp /home/vmdsk/$1.refresh /home/vmdsk/$1.qcow
+if [ $? -ne 0 ]; then
+	echo `date +"%F %T"` "$HOSTNAME: xl refresh failed ($1)" >> /home/vmdsk/vlab_bld.log
+	exit 1
+fi
+
+echo `date +"%F %T"` "$HOSTNAME: xl refresh success ($1)" >> /home/vmdsk/vlab_bld.log
+

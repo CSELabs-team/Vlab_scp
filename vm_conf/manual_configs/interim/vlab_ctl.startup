@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# args need to be escaped...
+/home/vlab_scp/net_scripts/mk_vm_brg.sh Network-$2 $2
+if [ $? -ne 0 ]; then
+	echo `date +"%F %T"` "$HOSTNAME: could not create network ($1: $2)" >> /home/vmdsk/vlab_bld.log
+	exit 1
+fi
+
+xl create /home/vlab_scp/vm_conf/manual_configs/$1.conf
+echo `date +"%F %T"` "$HOSTNAME: xl create success ($1)" >> /home/vmdsk/vlab_bld.log

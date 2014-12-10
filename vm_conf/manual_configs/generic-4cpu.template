@@ -1,0 +1,28 @@
+# we replace vm_memory, vm_disk, vm_name, vm_vnc, vm_vif
+
+kernel = '/usr/lib/xen/boot/hvmloader'
+builder = 'hvm'
+memory = 'VM_MEMORY' 
+vcpus = '4'
+device_model='/usr/lib/xen/bin/qemu-dm'
+
+# Disks
+disk = [ 'tap:qcow2:/home/vmdsk/VM_DISK,hda,w' ]
+
+# Hostname
+name ='VM_NAME'
+
+# Mouse
+usb = 1
+usbdevice = 'tablet'
+
+# Behaviour
+boot='c'
+vnc=1
+vncviewer=0
+sdl=0
+
+vncdisplay=VM_VNC # vnc console will use port 5900 + 01 for the display
+
+#NIC
+vif=[VM_VIF]

@@ -1,0 +1,25 @@
+#!/bin/bash
+#./vlab_ctl.shutdown $1
+
+#args need to be escaped...
+sleep 5
+
+if [ -f /home/vmdsk/$1.save ]
+then 
+	xl restore /home/vmdsk/$1.save
+else
+	cp /home/vmdsk/$1.refresh /home/vmdsk/$1.qcow
+fi
+
+if [ $? -ne 0 ]; then
+	echo `date +"%F %T"` "$HOSTNAME: xl restore failed ($1)" >> /home/vmdsk/vlab_bld.log
+	exit 1
+fi
+
+echo `date +"%F %T"` "$HOSTNAME: xl restore success ($1)" >> /home/vmdsk/vlab_bld.log
+
+#sleep 5
+#gzip -c /home/local_vm_dsk/xp_1.qcow2 > /home/vmdsk/xp_1.qcow2.gz
+#sync
+#sleep 2
+#rm /home/local_vm_dsk/xp_1.qcow2

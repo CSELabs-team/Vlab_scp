@@ -1,0 +1,10 @@
+start 		10.66.1.50
+end		10.66.1.250
+interface	bond0.66
+option	subnet	255.255.255.0
+opt	router	10.66.1.1
+option	dns	8.8.8.8
+option	domain	vital-nat-66
+option	lease	3600
+pidfile	/home/vlab_scp/vmnet_conf/run/nat-66.pid
+lease_file /home/vlab_scp/vmnet_conf/leases/nat-66.leases

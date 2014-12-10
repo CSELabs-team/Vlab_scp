@@ -1,0 +1,34 @@
+Important scripts
+
+Script Name - Brief Description
+------------------------------------
+cntl_interim-new.php - controller script
+        this script also includes load balanacing.
+        It is heavly commented and documented
+
+
+balancer.php - used by controller
+
+locator.php - misc. functions used by controller
+
+log4php directory - Apache logger project
+
+vlab_controller.log.# - log file for controller
+			script
+
+doAction_output.log - log file for executing
+			bash script from controller
+			script
+
+remote_exec.sh - runs xen commands remotely
+
+reimage.sh - reimage vm script
+
+
+CHANGES
+------------------------------------
+Luis - original load balancer script
+FILENAME: controller.php
+was renamed to cntl_interim-new.php
+
+

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#args need to be escaped...
+#xl shutdown $1
+#xl shutdown -F $1
+xl destroy $1
+
+if [ $? -ne 0 ]; then
+	echo `date +"%F %T"` "$HOSTNAME: xl shutdown failed ($1)" >> /home/vmdsk/vlab_bld.log
+	exit 1
+fi
+echo `date +"%F %T"` "$HOSTNAME: xl shutdown success ($1)" >> /home/vmdsk/vlab_bld.log
+#gzip -c /home/local_vm_dsk/xp_1.qcow2 > /home/vmdsk/xp_1.qcow2.gz
+#sync
+#sleep 2
+#rm /home/local_vm_dsk/xp_1.qcow2

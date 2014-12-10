@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# args need to be escaped..
+
+brctl addif $1 $2
+
+echo `date +"%F %T"` "$HOSTNAME: Interface ($2) added to Bridge ($1)" >> /home/vmdsk/vlab_bld.log
+

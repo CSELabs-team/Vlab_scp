@@ -1,0 +1,3 @@
+#The scripts in this directory are the called from the controller, and executed on the appropriate xen node.
+
+#This should probably be moved or restructured into the something like "remote call" directory.  Also the args passed here need some attention to prevent security problems.
