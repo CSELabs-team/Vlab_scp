@@ -2,12 +2,13 @@
 
 #kernel = '/usr/lib/xen/boot/hvmloader'
 builder = 'hvm'
-memory = 'VM_MEMORY' 
+memory = 'VM_MEMORY'
 vcpus = '2'
 cpus= '4-47'
 
 #device_model='/usr/lib/xen/bin/qemu-dm'
 device_model_version = "qemu-xen-traditional"
+xen_platform_pci=1
 
 # Disks
 disk = [ 'tap:qcow2:/home/vmdsk/VM_DISK,xvda,w' ]
