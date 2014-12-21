@@ -33,13 +33,13 @@ function MyVncPort($VMID) {
     //there should be only one row.  if not you have BIG PROBLEMS
     //vm_id should be unique
     if (count($rows) != 1)
-       die ("MyVncPort: ERROR: multiple vmids in vm_resource!!"); 
-    $answer = $rows[0]; 
+       die ("MyVncPort: ERROR: multiple vmids in vm_resource!!");
+    $answer = $rows[0];
     return($answer['vnc_port']);
 }
 
 function VIF($VMID) {
-    // $q = "SELECT vif_mac, vif_brdg_id, vif_name FROM vlab_interim.vif WHERE vm_id = $VMID ORDER BY vif_name;"; 
+    // $q = "SELECT vif_mac, vif_brdg_id, vif_name FROM vlab_interim.vif WHERE vm_id = $VMID ORDER BY vif_name;";
     $t = "vlab_interim";
     $q = "SELECT vif.vif_mac, vbridge.brdg_name, vif.vif_name FROM $t.vif, $t.vbridge WHERE vm_id = $VMID and vif.vif_brdg_id = vbridge.brdg_id ORDER BY vif_name;";
     $rows = GetRows($q);
@@ -47,10 +47,10 @@ function VIF($VMID) {
         function($row) {
             $vif_mac  = $row['vif_mac'];
             $vif_name = $row['vif_name'];
-            $brdg_name   = $row['brdg_name']; 
+            $brdg_name   = $row['brdg_name'];
 
-            //return("'mac=$vif_mac,vifname=$vif_name,bridge=$brdg_name'"); 
-            return("'mac=$vif_mac,bridge=$brdg_name'"); 
+            //return("'mac=$vif_mac,vifname=$vif_name,bridge=$brdg_name'");
+            return("'mac=$vif_mac,bridge=$brdg_name'");
         }, $rows);
     return(implode(',', $macs));
 }
@@ -60,22 +60,22 @@ function GetClassSize($class)
     $q = "SELECT size FROM vlab_interim.counter WHERE name = '$class'";
     $rows = GetRows($q);
     if (count($rows) != 1)
-       die ("GetClassSize: ERROR: multiple sizes for a class in counter!!"); 
+       die ("GetClassSize: ERROR: multiple sizes for a class in counter!!");
     $answer = $rows[0];
     return($answer['size']);
 }
 
 function MakeNewQcowFromBase() {
-    //$q = "SELECT vm_name_base, vnc_base, conf_template, course, id, vm_friendly_name, reimage_file, disk_base_name, memory WHERE createdp=false"; 
-    $q = "SELECT vm_name_base, id, reimage_file, backing_file from vlab_interim.vnc_base WHERE createdp=false"; 
-    $NewBases = GetRows($q); 
+    //$q = "SELECT vm_name_base, vnc_base, conf_template, course, id, vm_friendly_name, reimage_file, disk_base_name, memory WHERE createdp=false";
+    $q = "SELECT vm_name_base, id, reimage_file, backing_file from vlab_interim.vnc_base WHERE createdp=false";
+    $NewBases = GetRows($q);
 
-    $size = count($NewBases); 
+    $size = count($NewBases);
     l("There are $size new bases to make in vnc_base");
 
     if ($size == 0) return(false);
     else {
-        array_map(function($x) { 
+        array_map(function($x) {
 	    MakeSingleQcow($x);
             MarkCreated('vlab_interim.vnc_base', array('id' => $x['id']));
         }, $NewBases);
@@ -84,8 +84,8 @@ function MakeNewQcowFromBase() {
 }
 
 function MakeUnborn() {
-    $query 
-        = "SELECT * from vlab_interim.vm_resource WHERE createdp=false;"; 
+    $query
+        = "SELECT * from vlab_interim.vm_resource WHERE createdp=false;";
     $unborns = GetRows($query);
 
     $size = count($unborns);
@@ -94,14 +94,14 @@ function MakeUnborn() {
     if ($size == 0) return(false);
     else {
         pg_query(MyDB::Get()->Connection(), "BEGIN");
-        array_map(function($x) { 
+        array_map(function($x) {
             global $PATH;
             global $GENERIC_TEMPLATE;
 
-            MakeTemplate($GENERIC_TEMPLATE, $x); 
+            MakeTemplate($GENERIC_TEMPLATE, $x);
             CopyQcow($x['reimage_file'], $x['disk_image']);
 
-            MarkCreatedAndEnabled('vlab_interim.vm_resource', 
+            MarkCreatedAndEnabled('vlab_interim.vm_resource',
                         array('vm_id' => $x['vm_id']));}, $unborns);
         pg_query(MyDB::Get()->Connection(), "COMMIT");
         return(true);
@@ -124,7 +124,7 @@ function GetRows($query) {
 /* TODO: is this faster if you're only matching part of the row? */
 function MarkCreated($table, $constraint) {
     $data = array("createdp" => "true");
-    $res = pg_update(MyDB::Get()->Connection(), $table, $data, $constraint) 
+    $res = pg_update(MyDB::Get()->Connection(), $table, $data, $constraint)
         or die ('MarkCreated: Update failed '.pg_last_error());
     if ($res) l("row updated");
 
@@ -132,7 +132,7 @@ function MarkCreated($table, $constraint) {
 
 function MarkCreatedAndEnabled($table, $constraint) {
     $data = array("createdp" => "true", "disabled" => "0");
-    $res = pg_update(MyDB::Get()->Connection(), $table, $data, $constraint) 
+    $res = pg_update(MyDB::Get()->Connection(), $table, $data, $constraint)
         or die ('MarkCreatedAndEnabled: Update failed '.pg_last_error());
     if ($res) l("row updated");
 
@@ -140,7 +140,7 @@ function MarkCreatedAndEnabled($table, $constraint) {
 
 function AskTheDB($query)
 {
-    $dbResult = pg_query(MyDB::Get()->Connection(), $query) 
+    $dbResult = pg_query(MyDB::Get()->Connection(), $query)
         or die ('Query failed '.pg_last_error());
     return($dbResult);
 }
@@ -150,21 +150,21 @@ class MyDB {
     private static $i = 0;
 
     private $DBC;
-	
+
     public function Connection() {
         return $this->DBC;
     }
 
-    private function __construct() { 
+    private function __construct() {
         global $connstr;
-        //dp("MyDB::__construct"); 
+        //dp("MyDB::__construct");
         $this->DBC = pg_connect($connstr) or die ("pg_connect failed");
-        $this->i += 1; 
+        $this->i += 1;
         if ($this->i > 1) die ("Instance singleton is not single.");
     }
 	function __destruct() {
         global $DEBUG;
-        //dp("MyDB::__destruct"); 
+        //dp("MyDB::__destruct");
 		l("closing db connection");
         if ($DEBUG and $this->i > 1) die ("singleton is not single!!");
         pg_close($this->DBC);
@@ -190,7 +190,7 @@ $GENERIC_TEMPLATE = "$PATH/generic.template";
 
 function MakeTemplate($file, $info) {
     global $PATH;
-    //$PATH = $DEBUG ? "/tmp" : "/home/vlab_scp/vm_conf/manual_configs"; 
+    //$PATH = $DEBUG ? "/tmp" : "/home/vlab_scp/vm_conf/manual_configs";
     //dp("in MakeTemplate");
 
     $fd = fopen($file, 'r');
@@ -199,8 +199,8 @@ function MakeTemplate($file, $info) {
 
     $out = str_replace('VM_MEMORY', $info['memory'],     $template);
     $out = str_replace('VM_DISK',   $info['disk_image'], $out);
-    $out = str_replace('VM_NAME',   $info['vm_name'],    $out); 
-#    $out = str_replace('VCPU',   $info['vcpu'],    $out); 
+    $out = str_replace('VM_NAME',   $info['vm_name'],    $out);
+#    $out = str_replace('VCPU',   $info['vcpu'],    $out);
     $out = str_replace('VM_VNC', MyVncPort($info['vm_id']), $out);
     $out = str_replace('VM_VIF', VIF($info['vm_id']), $out);
 
@@ -229,9 +229,9 @@ function MakeSingleQcow($row) {
     //print_r($PathArr);
     $cmd = "ssh Vlab-xen1 mkdir $X/$PathArr[0]";
     l("running: $cmd");
-    
+
     system($cmd);
-    $cmd = "ssh Vlab-xen1 /usr/local/bin/qemu-img-xen create -b $ImgDir/$BaseName -f qcow2 $X/$NewFile 200M" ;
+    $cmd = "ssh Vlab-xen1 /usr/bin/qemu-img create -b $ImgDir/$BaseName -f qcow2 $X/$NewFile 200M" ;
     //TODO make this actually system not log
     l("running: $cmd");
     system($cmd);
@@ -245,8 +245,8 @@ function ProcessDB() {
     pg_query("insert into $t.reflector (vm_id, reflector_port)(select vm_id, vnc_port+10000 as reflector_port from $t.vm_resource where createdp='false');");
     pg_query("insert into $t.user_reflector (user_id, reflector_id) (select $t.\"user\".user_id, $t.reflector.reflector_id from $t.reflector, $t.vm_resource, $t.\"user\" where $t.reflector.vm_id = $t.vm_resource.vm_id and $t.\"user\".user_name = $t.vm_resource.username and $t.vm_resource.createdp = 'false');");
 
-    if (MakeNewQcowFromBase()) { 
-        MakeUnborn(); 
+    if (MakeNewQcowFromBase()) {
+        MakeUnborn();
     }
     pg_query(MyDB::Get()->Connection(), "COMMIT");
 }
@@ -258,7 +258,7 @@ function ClassesToBeDeleted() {
     $sz = count($rows);
     $ret = array();
     for ($i=0; $i<$sz; $i++) {
-        $ret[$i] = $rows[$i]['id']; 
+        $ret[$i] = $rows[$i]['id'];
     }
     return($ret);
 }
@@ -270,7 +270,7 @@ function ClassesToBeRestored() {
     $sz = count($rows);
     $ret = array();
     for ($i=0; $i<$sz; $i++) {
-        $ret[$i] = $rows[$i]['id']; 
+        $ret[$i] = $rows[$i]['id'];
     }
     return($ret);
 }
@@ -285,16 +285,16 @@ $ConfFilesBaseDir = '/home/vlab_scp/vm_conf/manual_configs';
 function DeleteDiskFiles($dict) {
     global $DiskFilesBaseDir;
     global $ConfFilesBaseDir;
-    $tmp  = explode('/', $dict['reimage_file']); 
+    $tmp  = explode('/', $dict['reimage_file']);
     $dir  = $tmp[0];
     $ReimageFile = $dict['disk_image'];
     $ConfFile = $dict['vm_name' ] . '.conf';
     $cmds = array();
-#    $cmds[0] = "ssh vlab-bld-y2 rm -rf $DiskFilesBaseDir/$dir"; 
+#    $cmds[0] = "ssh vlab-bld-y2 rm -rf $DiskFilesBaseDir/$dir";
 #    $cmds[1] = "ssh vlab-bld-y2 rm -rf $DiskFilesBaseDir/$ReimageFile";
 #    $cmds[2] = "ssh vlab-bld-y2 rm -rf $ConfFilesBaseDir/$ConfFile";
 # Don't delete, make an archive... Sorry Joel!
-    $cmds[0] = "ssh Vlab-xen1 mv $DiskFilesBaseDir/$dir $DiskFilesBaseDir/backup/$dir"; 
+    $cmds[0] = "ssh Vlab-xen1 mv $DiskFilesBaseDir/$dir $DiskFilesBaseDir/backup/$dir";
     $cmds[1] = "ssh Vlab-xen1 mv $DiskFilesBaseDir/$ReimageFile $DiskFilesBaseDir/backup/$dir";
     $cmds[2] = "ssh Vlab-xen1 mv $ConfFilesBaseDir/$ConfFile $ConfFilesBaseDir/$ConfFile/backup/$dir/";
     array_map('LogAndSys', $cmds);
@@ -314,7 +314,7 @@ function DeleteAClass($id, $restore) {
     $ans = GetRows($q[2]);
     //print_r($ans);
     array_map('DeleteDiskFiles', $ans);
-    
+
     $sql = array();
     $sql[0] = "delete from $t.vbridge where brdg_id in (select vif_brdg_id from $t.vif where vm_id in (select vm_id from $t.vm_resource where reimage_file in (select reimage_file from $t.vnc_base where course = ($q[0]))));";
     $sql[1] = "delete from $t.vif where vm_id in (select vm_id from $t.vm_resource where reimage_file in (select reimage_file from $t.vnc_base where course = ($q[0])))";
@@ -329,11 +329,11 @@ function DeleteAClass($id, $restore) {
         $sql[7] = "delete from $t.class where deletep = true;";
         $sql[8] = "delete from $t.email where course_id=$id;";
     }
-    
+
     //array_map(function($x) { print($x."\n"); }, $sql);
     array_map('LogAndDBI', $sql);
-        
-    
+
+
 }
 
 function ProcessDel() {
@@ -358,6 +358,3 @@ function ProcessRes() {
 }
 
 ?>
-
-
-
