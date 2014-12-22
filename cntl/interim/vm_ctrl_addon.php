@@ -231,7 +231,7 @@ function MakeSingleQcow($row) {
     l("running: $cmd");
 
     system($cmd);
-		$cmd = "ssh Vlab-xen1 /usr/bin/qemu-img create -f qcow2 -o compat=0.10 backing_file=$ImgDir/$BaseName $X/$NewFile" ;
+		$cmd = "ssh Vlab-xen1 /usr/bin/qemu-img create -f qcow2 -o compat=0.10 -o backing_file=$ImgDir/$BaseName $X/$NewFile" ;
     //TODO make this actually system not log
     l("running: $cmd");
     system($cmd);
